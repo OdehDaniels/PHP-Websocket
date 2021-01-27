@@ -20,6 +20,159 @@ class User{
   }
 
   /**
+   * Set User ID.
+   * 
+   * @param $id
+   * 
+   */
+  public function setUserId($id){
+    $this->id = $id;
+  }
+
+  /**
+  * Get User ID.
+  */
+  public function getUserId(){
+    return $this->id;
+  }
+
+  /**
+   * Set Username.
+   * 
+   * @param $username
+   * 
+   */
+  public function setUsername($username){
+    $this->username = $username;
+  }
+
+  /**
+  * Get Username.
+  */
+  public function getUsername(){
+    return $this->username;
+  }
+
+  /**
+   * Set Email.
+   * 
+   * @param $email
+   * 
+   */
+  public function setEmail($email){
+    $this->email = $email;
+  }
+
+  /**
+  * Get Email.
+  */
+  public function getEmail(){
+    return $this->email;
+  }
+
+  /**
+   * Set Password.
+   * 
+   * @param $password
+   * 
+   */
+  public function setPassword($password){
+    $this->password = $password;
+  }
+
+  /**
+  * Get Password.
+  */
+  public function getPassword(){
+    return $this->password;
+  }
+
+  /**
+   * Set Profile.
+   * 
+   * @param $profile
+   * 
+   */
+  public function setProfile($profile){
+    $this->profile = $profile;
+  }
+
+  /**
+  * Get Profile.
+  */
+  public function getProfile(){
+    return $this->profile;
+  }
+
+  /**
+   * Set Status.
+   * 
+   * @param $status
+   * 
+   */
+  public function setStatus($status){
+    $this->status = $status;
+  }
+
+  /**
+  * Get Status.
+  */
+  public function getStatus(){
+    return $this->status;
+  }
+
+  /**
+   * Set User isActive Status.
+   * 
+   * @param $is_active
+   * 
+   */
+  public function setUserIsActiveStstus($is_active){
+    $this->is_active = $is_active;
+  }
+
+  /**
+  * Get isActive Status.
+  */
+  public function getUserIsActiveStstus(){
+    return $this->is_active;
+  }
+
+  /**
+   * Set User Verification Token.
+   * 
+   * @param $verification_token
+   * 
+   */
+  public function setUserVerificationToken($verification_token){
+    $this->verification_token = $verification_token;
+  }
+
+  /**
+  * Get User Verification Token.
+  */
+  public function getsetUserVerificationToken(){
+    return $this->verification_token;
+  }
+
+  /**
+   * Set CreatedAt.
+   * 
+   * @param $status
+   * 
+   */
+  public function setCreatedAt($created_at){
+    $this->created_at = $created_at;
+  }
+
+  /**
+  * Get CreatedAt.
+  */
+  public function getCreatedAt(){
+    return $this->created_at;
+  }
+
+  /**
    * Return User ID by user's email.
    */
   public function getUserIdByEmail(){

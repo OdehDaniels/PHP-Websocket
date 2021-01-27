@@ -8,10 +8,9 @@
 <meta name="author" content="Themesberg">
 
 <!-- Fontawesome -->
-<link type="text/css" href="vendor/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
-
-<!-- Pixel CSS -->
-<link type="text/css" href="css/neumorphism.css" rel="stylesheet">
+<link type="text/css" href="node_modules/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+<!-- Custom CSS -->
+<link type="text/css" href="assets/css/custom.css" rel="stylesheet">
 
 </head>
 
@@ -100,23 +99,9 @@
     </main>
 
 <!-- Core -->
-<script src="vendor/jquery/dist/jquery.min.js"></script>
-<script src="vendor/popper.js/dist/umd/popper.min.js"></script>
-<script src="vendor/bootstrap/dist/js/bootstrap.min.js"></script>
-<script src="vendor/headroom.js/dist/headroom.min.js"></script>
-
-<!-- Vendor JS -->
-<script src="vendor/onscreen/dist/on-screen.umd.min.js"></script>
-<script src="vendor/nouislider/distribute/nouislider.min.js"></script>
-<script src="vendor/waypoints/lib/jquery.waypoints.min.js"></script>
-<script src="vendor/jquery.counterup/jquery.counterup.min.js"></script>
-<script src="vendor/smooth-scroll/dist/smooth-scroll.polyfills.min.js"></script>
-<script src="vendor/prismjs/prism.js"></script>
-
+<script src="node_modules/jquery/dist/jquery.min.js"></script>
+<script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
 <script async defer src="https://buttons.github.io/buttons.js"></script>
-
-<!-- Neumorphism JS -->
-<script src="assets/js/neumorphism.js"></script>
 </body>
 
 </html>

@@ -1,48 +1,20 @@
 <?php
 include "./autoload.php";
+include 'config/database.php';
+include_once "app/model/User.php";
 include_once "./app/Constants.php";
 
 error_reporting(E_ALL);
 session_start();
+if(isset($_SESSION['userId'])){
+    header("Location: modules/0/index.php");
+}
 
 $pageTitle = "Register";
-include_once "./middleware.php";
-
 $requireLogin = false;
 $accessDenied = false;
 $notActive = false;
-
-if($_POST && $_POST['email'] && $_POST['password']){
-    include 'config/database.php';
-    include_once "app/model/User.php";
-
-    $database = new Database();
-    $db = $database->getConnection();
-
-    $user = new User($db);
-
-    $user->email = $_POST['email'];
-    $emailExists = $user->emailAlreadyExists();
-    if ($emailExists && password_verify($_POST['password'], $user->password) && 
-        $user->is_active == \ActiveStatus::ACTIVE){
-
-        $_SESSION['logged_in'] = true;
-        $_SESSION['userId'] = $user->id;
-        $_SESSION['type'] = $user->type;
-        $_SESSION['username'] = htmlspecialchars($user->username, ENT_QUOTES, 'UTF-8');
-        $_SESSION['email'] = $user->email;
-
-            header("Location: modules/0/index.php?action=login_success");
-            exit();
-    } elseif ($emailExists && password_verify($_POST['password'], $user->password) && 
-        $user->is_active == \ActiveStatus::INACTIVE){
-        $notActive=true;
-    } else{
-        $accessDenied = true;
-    }
-}
   
-
 ?>
 
 <!DOCTYPE html>
@@ -66,6 +38,61 @@ if($_POST && $_POST['email'] && $_POST['password']){
         <!-- Section -->
         <section class="min-vh-100 d-flex bg-primary align-items-center">
             <div class="container">
+            <?php
+                if($_POST && isset($_POST['email']) && isset($_POST['password'])){
+                    $database = new Database();
+                    $db = $database->getConnection();
+                
+                    $userModel = new User($db);
+                
+                    $userModel->email = $_POST['email'];
+                    if($userModel->emailAlreadyExists()){
+                        echo ' <div class="alert alert-danger alert-dismissible">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                    <h4><i class="icon fa fa-ban"></i> Alert!</h4>
+                                    Email already exits!!
+                                    </div>';
+                    } elseif (isset($_POST['username'])) {
+                        if (isset($_POST['confirm-password']) && $_POST['password'] === $_POST['confirm-password']) {
+                            $userModel->setUsername($_POST['username']);
+                            $userModel->setEmail($_POST['email']);
+                            $userModel->setPassword($_POST['password']);
+                            if($userModel->registerNewUser()){
+                                echo ' <div class="alert alert-success alert-dismissible">
+                                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                        <h4><i class="fa fa fa-check"></i> Alert!</h4>
+                                        Successfully Added.
+                                        </div>';
+                                $_POST=array();
+                                header("Location: modules/0/index.php?action=login_success");
+                                // $URL = $home_url."modules/0/index.php?action=login_success";
+                                // echo "<script type='text/javascript'>document.location.href='{$URL}';</script>";
+                                // echo '<META HTTP-EQUIV="refresh" content="0;URL=' . $URL . '">';
+                            } else {
+                                echo '<div class="alert alert-danger alert-dismissible">
+                                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                            <h4><i class="fa fa fa-ban"></i> Alert!</h4>
+                                            Error while inserting.....
+                                        </div>';
+                        
+                            }
+                        } else {
+                            echo '<div class="alert alert-danger alert-dismissible">
+                                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                        <h4><i class="fa fa fa-ban"></i> Password Mismatch</h4>
+                                        The two password do not match.
+                                    </div>';
+                        }
+                    } else {
+                        echo '<div class="alert alert-danger alert-dismissible">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                    <h4><i class="fa fa fa-ban"></i> Empty Input Field</h4>
+                                    Please fill in the required field.
+                                </div>';
+                    }
+                }
+
+            ?>
                 <div class="row justify-content-center">
                     <div class="col-12 col-md-8 col-lg-6 justify-content-center">
                         <div class="card bg-primary shadow-soft border-light p-4">

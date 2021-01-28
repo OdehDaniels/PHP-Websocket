@@ -377,6 +377,31 @@ class User{
   }
 
   /**
+   * Make Avatar.
+   * 
+   * @param $character
+   * 
+   */
+  public function makeAvatar($character){
+    $path = "images/". time() .".png";
+    $image = imagecreate(200, 200);
+    $red = rand(0, 255);
+    $blue = rand(0, 255);
+    $green = rand(0, 255);
+    imagecolorallocate($image, $red, $blue, $green);
+    $textColor = imagecolorallocate($image, 255,255,255);
+
+    $font = dirname(__FILE__) .'/font/arial.ttf';
+
+    imagettftext($image, 100, 0, 55, 150, $textColor, $font, $character);
+    imagepng($image, $path);
+    imagedestroy($image);
+
+    return $path;
+
+  }
+
+  /**
    * Delete User by ID.
    */
   public function deleteUser(){

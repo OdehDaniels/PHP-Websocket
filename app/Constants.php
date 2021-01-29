@@ -20,19 +20,19 @@ final class ActiveStatus
    public static function getValue($x)
    {
        $value = null;
-       switch ($x) {
-           case '0':
-               $value = "Inactive";
-               break;
-           case '1':
-               $value = "Active";
-               break;
-       case '2':
-           $value = "Dormant";
-           break;
-       }
+        switch ($x) {
+            case '0':
+                $value = "Inactive";
+                break;
+            case '1':
+                $value = "Active";
+                break;
+            case '2':
+                $value = "Dormant";
+                break;
+        }
 
-       return $value;
+        return $value;
    }
 
    /**

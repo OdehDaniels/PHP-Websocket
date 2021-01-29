@@ -2,7 +2,7 @@
 class User{
 
   private $conn;
-  private $table_name="user";
+  private $table_name="users";
 
   public $id;
   public $username;
@@ -88,19 +88,19 @@ class User{
   }
 
   /**
-   * Set Profile.
+   * Set Profile image.
    * 
    * @param $profile
    * 
    */
-  public function setProfile($profile){
+  public function setUserProfileImage($profile){
     $this->profile = $profile;
   }
 
   /**
   * Get Profile.
   */
-  public function getProfile(){
+  public function getUserProfileImage(){
     return $this->profile;
   }
 
@@ -153,23 +153,6 @@ class User{
   */
   public function getsetUserVerificationToken(){
     return $this->verification_token;
-  }
-
-  /**
-   * Set CreatedAt.
-   * 
-   * @param $status
-   * 
-   */
-  public function setCreatedAt($created_at){
-    $this->created_at = $created_at;
-  }
-
-  /**
-  * Get CreatedAt.
-  */
-  public function getCreatedAt(){
-    return $this->created_at;
   }
 
   /**
@@ -256,24 +239,17 @@ class User{
     $this->email=htmlspecialchars(strip_tags($this->email));
     $stmt->bindParam(1, $this->email);
 
-    $stmt->execute();
-    $num = $stmt->rowCount();
-      if($num>0){
+    if ($stmt->execute()) {
+        $num = $stmt->rowCount();
+        if ($num>0) {
+          $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-      $row = $stmt->fetch(PDO::FETCH_ASSOC);
+          return true;
+        }
+    } else {
+        $this->showError($stmt);
 
-      $this->username = $row['username'];
-      $this->email = $row['email'];
-      $this->password = $row['password'];
-      $this->is_active = $row['is_active'];
-      $this->profile = $row['profile'];
-      $this->status = $row['status'];
-      $this->id = $row['id'];
-
-      return true;
-      } else {
-      $this->showError($stmt);
-      return false;
+        return false;
     }
     
   } 
@@ -298,10 +274,12 @@ class User{
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
     $this->username = $row['username'];
-    $this->email = $row['email'];
-    $this->status = $row['status'];
-    $this->profile = $row['profile'];
-    $this->id = $row['id'];
+            $this->email = $row['email'];
+            $this->password = $row['password'];
+            $this->is_active = $row['is_active'];
+            $this->profile = $row['profile'];
+            $this->status = $row['status'];
+            $this->id = $row['id'];
   }
 
   /**
@@ -313,19 +291,31 @@ class User{
       $query = "INSERT INTO
           " . $this->table_name . "
       SET
+        username=:username,
         email=:email,
         password=:password,
+        profile=:profile,
+        status=:status,
+        verification_token=:verification_token,
         created_at=:created_at
       ";
     $stmt = $this->conn->prepare($query);
 
+    $this->username=htmlspecialchars(strip_tags($this->username));
     $this->email=htmlspecialchars(strip_tags($this->email));
     $this->password=htmlspecialchars(strip_tags($this->password));
+    $this->profile=htmlspecialchars(strip_tags($this->profile));
+    $this->status=htmlspecialchars(strip_tags($this->status));
+    $this->verification_token=htmlspecialchars(strip_tags($this->verification_token));
     $this->created_at=htmlspecialchars(strip_tags($this->created_at));
 
+    $stmt->bindParam(':username', $this->username);
     $stmt->bindParam(':email', $this->email);
     $password_hash = password_hash($this->password, PASSWORD_BCRYPT);
     $stmt->bindParam(':password', $password_hash);
+    $stmt->bindParam(':profile', $this->profile);
+    $stmt->bindParam(':status', $this->status);
+    $stmt->bindParam(':verification_token', $this->verification_token);
     $stmt->bindParam(':created_at', $this->created_at);
 
       if($stmt->execute()){
@@ -336,7 +326,6 @@ class User{
       }
 
   }
-
 
   /**
    * Add | Update User by Id.
@@ -468,7 +457,7 @@ class User{
 
   public function showError($stmt){
     ini_set("log_errors", 1);
-    ini_set("error_log", "../../../app/logs/error.log");
+    ini_set("error_log", "app/logs/error.log");
     error_log( ":: Method Name::" . __METHOD__);
     error_log( ":: ERROR::" .$stmt->errorInfo()[2]);
   }

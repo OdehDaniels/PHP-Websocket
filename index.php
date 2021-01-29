@@ -6,6 +6,7 @@ include_once "./app/Constants.php";
 
 error_reporting(E_ALL);
 session_start();
+//session_destroy();
 if(isset($_SESSION['userId'])){
     header("Location: modules/0/index.php");
 }
@@ -25,11 +26,12 @@ $notActive = false;
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="title" content="Chat-App">
 <meta name="author" content="Themesberg">
-
-<!-- Fontawesome -->
 <link type="text/css" href="node_modules/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+<link type="text/css" href="node_modules/parsleyjs/src/parsley.css" rel="stylesheet">
 <!-- Custom CSS -->
 <link type="text/css" href="assets/css/custom.css" rel="stylesheet">
+<script type="text/javascript" src="node_modules/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript" src="node_modules/parsleyjs/dist/parsley.min.js"></script>
 
 </head>
 
@@ -45,7 +47,7 @@ $notActive = false;
                 
                     $userModel = new User($db);
                 
-                    $userModel->email = $_POST['email'];
+                    $userModel->setEmail($_POST['email']);
                     if($userModel->emailAlreadyExists()){
                         echo ' <div class="alert alert-danger alert-dismissible">
                                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
@@ -55,8 +57,10 @@ $notActive = false;
                     } elseif (isset($_POST['username'])) {
                         if (isset($_POST['confirm-password']) && $_POST['password'] === $_POST['confirm-password']) {
                             $userModel->setUsername($_POST['username']);
-                            $userModel->setEmail($_POST['email']);
                             $userModel->setPassword($_POST['password']);
+                            $userModel->setUserProfileImage($userModel->makeAvatar(strtoupper($_POST['username'][0])));
+                            $userModel->setStatus(\ActiveStatus::ACTIVE);
+                            $userModel->setUserVerificationToken(md5(uniqid()));
                             if($userModel->registerNewUser()){
                                 echo ' <div class="alert alert-success alert-dismissible">
                                         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
@@ -102,12 +106,12 @@ $notActive = false;
                             <div class="card-body">
                                 <form id="register" action="<?php  htmlspecialchars($_SERVER["PHP_SELF"]) ?>" method="POST">
                                     <div class="form-group">
-                                        <label for="exampleInputIcon4">Username</label>
+                                        <label for="exampleInputIcon4">Name</label>
                                         <div class="input-group mb-4">
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text"><span class="fas fa-user"></span></span>
                                             </div>
-                                            <input class="form-control" id="username" placeholder="username" 
+                                            <input class="form-control" id="username" placeholder="Brandon Acton" 
                                                 type="text" name="username"
                                                 data-parsley-pattern="/^[a-zA-Z\s]+$/" 
                                                 aria-label="username" required>
@@ -190,6 +194,7 @@ $notActive = false;
 <!-- Core -->
 <script src="node_modules/jquery/dist/jquery.min.js"></script>
 <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="node_modules/popper.js/dist/umd/popper.min.js"></script>
 <script async defer src="https://buttons.github.io/buttons.js"></script>
 </body>
 
